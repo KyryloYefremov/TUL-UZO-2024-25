@@ -7,7 +7,14 @@ from scipy.fft import dctn, idctn
 
 if __name__ == "__main__":
     ############## 1. ##############
-    def center_freq(fft):
+    def shift_quadrants(fft):
+        """
+        This function shifts the quadrants of the FFT result to center the frequency components.
+        :param 
+            fft: FFT result
+        :return: 
+            FFT result with quadrants shifted
+        """
         CH, CW = fft.shape[0] // 2, fft.shape[1] // 2  # center height, center width
         fft_centered = np.zeros_like(fft)
 
@@ -25,7 +32,7 @@ if __name__ == "__main__":
     fft = np.fft.fft2(gray)
     spectrum_orig = np.log(np.abs(fft) + 1)
 
-    fft_centered = center_freq(fft)
+    fft_centered = shift_quadrants(fft)
     spectrum_centered = np.log(np.abs(fft_centered) + 1)
 
     plt.figure(figsize=(10, 3))
@@ -45,6 +52,17 @@ if __name__ == "__main__":
 
     ############## 2. ##############
     def filter_image(fft, pass_filter):
+        """
+        This function applies a filter to the FFT result, 
+        computes the inverse FFT to get the filtered image, and normalizes it. 
+        It also computes the log-transformed magnitude of the filtered frequency spectrum.
+        :param
+            fft: FFT result
+            pass_filter: filter to apply
+        :return:
+            filtered image
+            log-transformed magnitude of the filtered frequency spectrum
+        """
         filtred_freq_spectrum = fft * pass_filter  # apply filter
         img = np.abs(np.fft.ifft2(filtred_freq_spectrum))
         img = ((img - img.min()) / (img.max() - img.min()) * 255).astype(np.uint8)  # normalize img to 0-255
@@ -96,6 +114,15 @@ if __name__ == "__main__":
 
     ############## 4. ##############
     def dct_limited_calc_and_plot(dct, n):
+        """
+        This function calculates and plots the DCT spectrum limited to an n x n area
+        and the corresponding image. It is called with different values of n.
+        :param
+            dct: DCT result
+            n: size of the area to limit the DCT spectrum to
+        :return:
+            None
+        """
         # calculate dct spectrum limited to NxN area
         dct_limited = np.zeros_like(dct)
         dct_limited[:n, :n] = dct[:n, :n]
@@ -117,6 +144,16 @@ if __name__ == "__main__":
 
     ############## 5. ##############
     def calculate_distances(input_hist, other_hists):
+        """
+        This function calculates the Euclidean distances between 
+        the input histogram and other histograms, 
+        and returns them sorted by distance.
+        :param
+            input_hist: input histogram
+            other_hists: other histograms
+        :return:
+            sorted distances
+        """
         # calculate distances between input img histogram and others
         distances = {}
         for f, hist in other_hists.items():
