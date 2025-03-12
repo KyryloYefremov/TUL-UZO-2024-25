@@ -90,8 +90,8 @@ if __name__ == "__main__":
     plt.show()
 
     # filter "Upper pass"
-    fft_hp_1, img_hp_1, fft_hp_1_img = filter_image(fft_centered, hp_1)
-    fft_hp_2, img_hp_2, fft_hp_2_img = filter_image(fft_centered, hp_2)
+    img_hp_1, fft_hp_1_img = filter_image(fft_centered, hp_1)
+    img_hp_2, fft_hp_2_img = filter_image(fft_centered, hp_2)
 
     _, ax = plt.subplots(2, 2)
     ax[0, 0].imshow(fft_hp_1_img, cmap='jet')
